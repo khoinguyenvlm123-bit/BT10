@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Nimbus Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid px-4">
+        <span class="navbar-brand mb-0 h1">JWT + Nimbus JOSE Dashboard</span>
+        <div class="d-flex align-items-center gap-3 text-white">
+            <span id="nav-user">Đang tải...</span>
+            <button id="logout" type="button" class="btn btn-outline-light btn-sm">Đăng xuất</button>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid py-4 px-4">
+    <div class="row g-4">
+        <div class="col-lg-3">
+            <div class="card shadow-sm h-100 sidebar-card">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div id="images" class="mb-3"></div>
+                        <h5 id="profile">Đang tải thông tin...</h5>
+                        <div id="profile-email" class="text-secondary small"></div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary dashboard-action active" data-target="section-overview">Tổng quan</button>
+                        <button class="btn btn-outline-primary dashboard-action" data-target="section-profile">Thông tin cá nhân</button>
+                        <button class="btn btn-outline-primary dashboard-action" data-target="section-users">Danh sách người dùng</button>
+                        <button class="btn btn-outline-primary dashboard-action" data-target="section-token">JWT Token</button>
+                        <button class="btn btn-outline-primary dashboard-action" data-target="section-api">Kiểm tra API bảo vệ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <div id="message-box"></div>
+
+            <section id="section-overview" class="dashboard-section">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h3 class="mb-2">JWT Authentication Demo</h3>
+                        <p class="text-secondary mb-0">
+                            Project sử dụng Spring Boot 3 + Spring Security và thư viện Nimbus JOSE + JWT.
+                            Các request bảo vệ sử dụng header <code>Authorization: Bearer &lt;token&gt;</code>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="card shadow-sm status-card h-100">
+                            <div class="card-body">
+                                <div class="text-secondary">Trạng thái đăng nhập</div>
+                                <h5 id="auth-status" class="mt-2">Đang kiểm tra...</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card shadow-sm status-card h-100">
+                            <div class="card-body">
+                                <div class="text-secondary">Thuật toán JWT</div>
+                                <h5 id="jwt-alg" class="mt-2">HS256</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card shadow-sm status-card h-100">
+                            <div class="card-body">
+                                <div class="text-secondary">Thời hạn token</div>
+                                <h5 id="jwt-exp-summary" class="mt-2">Đang đọc...</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-profile" class="dashboard-section d-none">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <strong>Thông tin người dùng hiện tại - GET /users/me</strong>
+                        <button id="refresh-profile" class="btn btn-sm btn-primary">Tải lại</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle mb-0">
+                                <tbody>
+                                <tr><th style="width: 220px;">ID</th><td id="me-id">-</td></tr>
+                                <tr><th>Họ tên</th><td id="me-fullname">-</td></tr>
+                                <tr><th>Email</th><td id="me-email">-</td></tr>
+                                <tr><th>Role</th><td id="me-role">-</td></tr>
+                                <tr><th>Ảnh</th><td id="me-image">-</td></tr>
+                                <tr><th>Created At</th><td id="me-created">-</td></tr>
+                                <tr><th>Updated At</th><td id="me-updated">-</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-users" class="dashboard-section d-none">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <strong>Danh sách người dùng - GET /users</strong>
+                        <button id="load-users" class="btn btn-sm btn-primary">Tải danh sách</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered align-middle mb-0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Họ tên</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Created At</th>
+                                </tr>
+                                </thead>
+                                <tbody id="users-table-body">
+                                <tr><td colspan="5" class="text-center text-secondary">Nhấn “Tải danh sách” để gọi API /users</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-token" class="dashboard-section d-none">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <strong>JWT Token đang lưu trong localStorage</strong>
+                        <button id="copy-token" class="btn btn-sm btn-outline-primary">Copy token</button>
+                    </div>
+                    <div class="card-body">
+                        <textarea id="token-value" class="form-control token-area" readonly></textarea>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-white"><strong>Header</strong></div>
+                            <div class="card-body"><pre id="token-header" class="json-box mb-0"></pre></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-white"><strong>Payload / Claims</strong></div>
+                            <div class="card-body"><pre id="token-payload" class="json-box mb-0"></pre></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-api" class="dashboard-section d-none">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white"><strong>Kiểm tra Bearer Token với API bảo vệ</strong></div>
+                    <div class="card-body">
+                        <p class="text-secondary">
+                            Các nút dưới đây gửi request có header <code>Authorization: Bearer &lt;token&gt;</code>.
+                        </p>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <button id="test-me-api" class="btn btn-success">Test GET /users/me</button>
+                            <button id="test-users-api" class="btn btn-success">Test GET /users</button>
+                            <button id="test-without-token" class="btn btn-outline-danger">Test không gửi token</button>
+                        </div>
+                        <div class="mb-2"><strong>HTTP status:</strong> <span id="api-status">-</span></div>
+                        <pre id="api-result" class="json-box api-result">Chưa gửi request.</pre>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/mainjs.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+body {
+    min-height: 100vh;
+}
+
+.sidebar-card {
+    min-height: 520px;
+}
+
+.user-avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #f1f3f5;
+}
+
+.status-card {
+    border: 0;
+}
+
+.dashboard-section {
+    animation: fadeIn .18s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: .35; transform: translateY(2px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.token-area {
+    min-height: 120px;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 13px;
+    word-break: break-all;
+}
+
+.json-box {
+    background: #111827;
+    color: #e5e7eb;
+    padding: 16px;
+    border-radius: 8px;
+    min-height: 170px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 13px;
+}
+
+.api-result {
+    min-height: 240px;
+}
+
+code {
+    color: #b42318;
+}
